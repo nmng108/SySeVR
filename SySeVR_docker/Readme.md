@@ -14,18 +14,36 @@ docker build -t sysevr:v1.0 .
 
 "sysevr: v1.0" is the name of the created image.
 
+
 ## 2) Run container
 
 execute command:
 
 ```bash
-docker run -itd --gpus all --name=sysevr -v /home/docker_mapping/Implementation:/home/SySeVR/Implementation -v /home/docker_mapping/data:/home/SySeVR/data sysevr:v1.0 /bin/bash
+docker run -itd --gpus all --name=sysevr -v [Project DIR]/Implementation:/home/SySeVR/Implementation -v [Project DIR]/data:/home/SySeVR/data sysevr:v1.0 /bin/bash
 ```
+in which [Project DIR] is the directory in host that contains this project. Ex: /home/projects/SySeVR
 
 "--name=sysevr",sysevr is the container name.
 
 "sysevr:v1.0" is the image name obtained in the previous step.
 
+"-v source:target" : create anonymous volume, map source code and data folders to container's project directory.
+
 After entering the container, the folders of Joern and neo4j software required by sysevr are under the path of / home/sysevr.
+
 Other required dependencies have been installed and configured.
+
+
+Then open container's shell and run the following commands:
+
+```bash
+rm -rf /usr/local/lib/python3.5/dist-packages/certifi
+python3 -m pip uninstall requests
+python3 -m pip install requests==2.19.0   # This reinstalls certifi-2022.6.15-py3-none-any.whl which breaks in python 3.5
+rm -rf /home/ssm-user/.local/lib/python3.5/site-packages/certifi
+python3 -m pip install certifi==2021.10.8
+python3 -m pip install pyyaml
+```
+where ``python3 -m pip`` may be replaced by ``pip`` or ``pip3``.
 

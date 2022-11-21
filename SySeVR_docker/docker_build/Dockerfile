@@ -7,13 +7,15 @@ RUN mkdir /usr/java \
 && rm -rf /etc/apt/sources.list \
 && cp -r /home/SySeVR/softdir/sources.list /etc/apt/ \
 && rm -rf /etc/apt/sources.list.d \
-&& apt-get clean \
-&& apt-get update \
+&& apt-get clean 
+RUN apt-get update && apt upgrade -y \
 && rm -rf /etc/profile \
 && cp -r /home/SySeVR/softdir/profile /etc \
 && cd /home/SySeVR/softdir \
 && chmod +x env.sh \
 && ./env.sh \
+# && apt-get install -y python \
+&& apt-get install -y python3 \
 && apt-get install -y python-setuptools \
 && apt-get install -y python-dev \
 && apt-get install -y python-pip \
@@ -27,6 +29,6 @@ RUN mkdir /usr/java \
 && apt-get install -y python-igraph \
 && apt-get install -y python-virtualenv \
 && pip3 install xlrd \
-&& pip3 install gensim==3.4 \
-&& pip3 install pyyaml \
 && rm -rf /home/SySeVR/softdir   
+RUN pip3 install gensim==3.4
+# RUN pip3 install pyyaml encounter error
