@@ -8,13 +8,12 @@ RUN mkdir /usr/java \
 && cp -r /home/SySeVR/softdir/sources.list /etc/apt/ \
 && rm -rf /etc/apt/sources.list.d \
 && apt-get clean 
-RUN apt-get update && apt upgrade -y \
+RUN apt-get update \
 && rm -rf /etc/profile \
 && cp -r /home/SySeVR/softdir/profile /etc \
 && cd /home/SySeVR/softdir \
 && chmod +x env.sh \
 && ./env.sh \
-# && apt-get install -y python \
 && apt-get install -y python3 \
 && apt-get install -y python-setuptools \
 && apt-get install -y python-dev \
@@ -29,6 +28,16 @@ RUN apt-get update && apt upgrade -y \
 && apt-get install -y python-igraph \
 && apt-get install -y python-virtualenv \
 && pip3 install xlrd \
-&& rm -rf /home/SySeVR/softdir   
-RUN pip3 install gensim==3.4
-# RUN pip3 install pyyaml encounter error
+&& pip3 install gensim==3.4
+RUN rm -rf /home/SySeVR/softdir
+RUN apt-get install -y nano
+# Install pyyaml package:
+RUN rm -rf /usr/local/lib/python3.5/dist-packages/certifi \
+&& python3 -m pip uninstall -y requests \
+&& python3 -m pip install requests==2.19.0 \
+&& rm -rf /home/ssm-user/.local/lib/python3.5/site-packages/certifi \
+&& python3 -m pip install certifi==2021.10.8 \ 
+&& pip3 install pyyaml
+
+
+
