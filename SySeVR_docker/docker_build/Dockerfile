@@ -38,6 +38,13 @@ RUN rm -rf /usr/local/lib/python3.5/dist-packages/certifi \
 && rm -rf /home/ssm-user/.local/lib/python3.5/site-packages/certifi \
 && python3 -m pip install certifi==2021.10.8 \ 
 && pip3 install pyyaml
-
+RUN pip3 install -U scikit-learn==0.22 \
+&& pip3 install imbalanced-learn==0.6.2
+# Install joern-tools
+RUN pip2 install chardet==3.0.4 \
+&& pip2 install pygraphviz==1.5 \
+&& git clone https://github.com/fabsx00/joern-tools /home/SySeVR \
+&& cd /home/SySeVR/joern-tools \
+&& python2 setup.py install
 
 

@@ -3,7 +3,7 @@ from access_db_operate import *
 from complete_PDG import *
 import re
 from py2neo.packages.httpstream import http
-http.socket_timeout = 9999
+http.socket_timeout = 999999
 
 
 def getSubCFGGraph(startNode, list_node, not_scan_list):
@@ -268,9 +268,14 @@ def main():
     j = JoernSteps()
     j.connectToDatabase()
     all_func_node = getALLFuncNode(j)
+    
+    import sys
+    sys.path.append("..")
+    from Implementation.ProjectDir import DATA_DIR
+    
     for node in all_func_node:
         testID = getFuncFile(j, node._id).split('/')[-2]
-        path = os.path.join("cfg_db", testID)
+        path = os.path.join('{0}/cfg_db'.format(DATA_DIR), testID)
 
         store_file_name = node.properties['name'] + '_' + str(node._id)
         store_path = os.path.join(path, store_file_name)

@@ -1,20 +1,10 @@
-SySeVR: A Framework for Using Deep Learning to Detect Vulnerabilities
-=
+Re-organize the project's file system (adopted to dir that link to Docker container)
+
+https://lucid.app/lucidchart/2557aaa7-1d14-4c47-a025-b83c4d611562/edit?viewport_loc=157%2C76%2C1220%2C821%2C0_0&invitationId=inv_8edfb715-fb5f-418d-977d-312b47235688
+
+- Implementation mainly contains .py code (source code)
+- data folder contains NVD SARD source data and its derivations.
 
 
-Zhen Li, Deqing Zou, Shouhuai Xu, Hai Jin, Yawei Zhu, Zhaoxuan Chen. [SySeVR: A Framework for Using Deep Learning to Detect Software Vulnerabilities](https://arxiv.org/abs/1807.06756). IEEE Transactions on Dependable and Secure Computing (TDSC). 2021. doi: 10.1109/TDSC.2021.3051525. 
-
----
-
-We propose a general framework for using deep learning to detect vulnerabilities, named SySeVR. For evaluate the SySeVR, we collect the Semantics-based Vulnerability Candidate (SeVC) dataset, which contains all kinds of vulnerabilities that are available from the National Vulnerability Database (NVD) and the Software Assurance Reference Dataset (SARD).
-
-At a high level, the SyVC representation corresponds to a piece of code in a program that may be vulnerable based on a syntax analysis. The SeVC representation corresponds to the extended statements of the SyVCs, with the extension to incorporate some of the other statements that are semantically related to the SyVCs.
-
-SeVC dataset focuses on 1,591 open source C/C++ programs from the NVD and 14,000 programs from the SARD. It contains 420,627 SeVCs, including 56,395 vulnerable SeVCs and 364,232 SeVCs that are not vulnerable. Four types of SyVCs are involved.
-
-1. Library/API Function Call : This accommodates the vulnerabilities that are related to library/API function calls.
-2. Array Usage: This accommodates the vulnerabilities that are related to arrays (e.g., improper use in array element access, array address arithmetic, address transfer as a function parameter).
-3. Pointer Usage: This accommodates the vulnerabilities that are related to pointers (e.g., improper use in pointer arithmetic, reference, address transfer as a function parameter).
-4. Arithmetic Expression: This accommodates the vulnerabilities that are related to improper arithmetic expressions (e.g., integer overflow).
-
-
+- co kha nang slice cua sard or nvd will overwrite the other one; 3 file khac ten nen ko dc doc
+=> set their output to the same files and change mode to 'a' - append

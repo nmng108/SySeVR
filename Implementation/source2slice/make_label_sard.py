@@ -32,13 +32,13 @@ def make_label(path, _dict):
         label = 0
         
         if slicename not in _dict.keys():
-	    labels.append(label)
+            labels.append(label)
             continue
         else:
             vulline_nums = _dict[slicename]
             for sentence in sentences:
                 if (is_number(sentence.split(' ')[-1])) is False:
-					continue
+                    continue
                 linenum = int(sentence.split(' ')[-1])
                 if linenum not in vulline_nums:
                     continue
@@ -47,7 +47,7 @@ def make_label(path, _dict):
                     break
         labels.append(label)
     
-    return labels
+        return labels
        
 def is_number(s):
     try:
@@ -57,7 +57,7 @@ def is_number(s):
         pass
  
     try:
-        import unicodedata
+        import unicodedata 
         unicodedata.numeric(s)
         return True
     except (TypeError, ValueError):
@@ -66,13 +66,19 @@ def is_number(s):
     return False
        
 def main():
-    f = open("./contain_all.txt", 'r')
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import SLICES_DIR, LABEL_SOURCE_DIR, SARD_SOURCE_DATA
+    
+    f = open(SARD_SOURCE_DATA + "/contain_all.txt", 'r')
     vullines = f.read().split('\n')
     f.close()
 
     _dict = {}
-    for vulline in vullines:
-        key = vulline.split(' ')[0].split('/')[-4] + vulline.split(' ')[0].split('/')[-3] + vulline.split(' ')[0].split('/')[-2] + '/' + vulline.split(' ')[0].split('/')[-1]
+    for i in range(0, len(vullines) - 1):
+        vulline = vullines[i]
+        filename_details = vulline.split(' ')[0].split('/') # except [-1] element is a C file name
+        key = filename_details[-4] + filename_details[-3] + filename_details[-2] + '/' + filename_details[-1]
         linenum = int(vulline.split(' ')[-1])
         if key not in _dict.keys():
             _dict[key] = [linenum]
@@ -81,30 +87,30 @@ def main():
 
     lang = './C/test_data/data_source_add/sard/'
     
-    path = os.path.join(lang, 'api_slices.txt')
+    path = os.path.join(SLICES_DIR, 'api_slices.txt')
     list_all_apilabel = make_label(path, _dict)
-    dec_path = os.path.join(lang, 'api_slices_label.pkl')
+    dec_path = os.path.join(LABEL_SOURCE_DIR, 'api_slices_label.pkl')
     f = open(dec_path, 'wb')
     pickle.dump(list_all_apilabel, f, True)
     f.close()
     
-    path = os.path.join(lang, 'array_slices.txt')
+    path = os.path.join(SLICES_DIR, 'arraysuse_slices.txt')
     list_all_arraylabel = make_label(path, _dict)
-    dec_path = os.path.join(lang, 'array_slices_label.pkl')
+    dec_path = os.path.join(LABEL_SOURCE_DIR, 'array_slices_label.pkl')
     f = open(dec_path, 'wb')
     pickle.dump(list_all_arraylabel, f, True)
     f.close()
     
-    path = os.path.join(lang, 'pointer_slices.txt')
+    path = os.path.join(SLICES_DIR, 'pointersuse_slices.txt')
     list_all_pointerlabel = make_label(path, _dict)
-    dec_path = os.path.join(lang, 'pointer_slices_label.pkl')
+    dec_path = os.path.join(LABEL_SOURCE_DIR, 'pointer_slices_label.pkl')
     f = open(dec_path, 'wb')
     pickle.dump(list_all_pointerlabel, f, True)
     f.close()
  
-    path = os.path.join(lang, 'expr_slices.txt')
+    path = os.path.join(SLICES_DIR, 'integeroverflow_slices.txt')
     list_all_exprlabel = make_label(path, _dict)
-    dec_path = os.path.join(lang, 'expr_slices_label.pkl')
+    dec_path = os.path.join(LABEL_SOURCE_DIR, 'expr_slices_label.pkl')
     f = open(dec_path, 'wb')
     pickle.dump(list_all_exprlabel, f, True)
     f.close()

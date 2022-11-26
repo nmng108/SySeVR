@@ -23,7 +23,8 @@ def dedouble(Hashpath,Deletepath):
         f.close()
 
 if __name__ == '__main__':
-    hashpath = './data/hash_slices/SARD/'
-    deletepath = './data/delete_list/SARD/'
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import SLICE_HASH_DIR, LIST_DELETE_DIR
 
-    dedouble(hashpath,deletepath)
+    dedouble(SLICE_HASH_DIR, LIST_DELETE_DIR)

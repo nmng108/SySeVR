@@ -6,14 +6,14 @@ This python file is used to train data in CNN model
 from __future__ import absolute_import
 from __future__ import print_function
 import pickle
-import cPickle
+# import _Pickle as cPickle
 import numpy as np
 import random
 import time
 import math
 import os
 from collections import Counter
-from imblearn.ensemble import BalanceCascade
+# from imblearn.ensemble import BalanceCascade
 from imblearn.over_sampling import ADASYN
 from imblearn.over_sampling import SMOTE
 
@@ -106,8 +106,13 @@ if __name__ == "__main__":
     batchSize = 32
     vectorDim = 40
     maxLen = 500
-    raw_traindataSetPath = "./dl_input/cdg_ddg/train/"
-    raw_testdataSetPath = "./dl_input/cdg_ddg/test/"
-    traindataSetPath = "./dl_input_shuffle/cdg_ddg/train/"
-    testdataSetPath = "./dl_input_shuffle/cdg_ddg/test/"
-    dealrawdata(raw_traindataSetPath, raw_testdataSetPath, traindataSetPath, testdataSetPath, batchSize, maxLen, vectorDim)
+    
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import CORPUS_TRAINSET_DIR, CORPUS_TESTSET_DIR, MAIN_TRAINSET_DIR, MAIN_TESTSET_DIR
+
+    # raw_traindataSetPath = "./dl_input/cdg_ddg/train/"
+    # raw_testdataSetPath = "./dl_input/cdg_ddg/test/"
+    # traindataSetPath = "./dl_input_shuffle/cdg_ddg/train/"
+    # testdataSetPath = "./dl_input_shuffle/cdg_ddg/test/"
+    dealrawdata(CORPUS_TRAINSET_DIR, CORPUS_TESTSET_DIR, MAIN_TRAINSET_DIR, MAIN_TESTSET_DIR, batchSize, maxLen, vectorDim)

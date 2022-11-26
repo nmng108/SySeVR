@@ -3,10 +3,10 @@ import pickle
 import re
 import os
 
-def make_label(data_path,label_path,_dict):	
+def make_label(slice_path,label_path,_dict):	
 
-	for filename in os.listdir(data_path):
-		filepath = os.path.join(data_path,filename)
+	for filename in os.listdir(slice_path):
+		filepath = os.path.join(slice_path,filename)
 		_labels = {}
 		f = open(filepath,'r')
 		slicelists = f.read().split('------------------------------')
@@ -74,12 +74,15 @@ def is_number(s):
 	
 if __name__ == '__main__':
 
-	with open('./vul_context_linux_kernel.pkl','rb') as f:
+	with open('./vul_context_func.pkl','rb') as f:
 		_dict = pickle.load(f)
 	f.close()
 	#print(_dict)
 
-	code_path = './data_source/linux_kernel/'  #slice code of software
-	label_path = './C/label_source/linux_kernel/'   #labels
+	import sys
+	sys.path.append('..')
+	from Implementation.ProjectDir import SLICES_DIR, LABEL_SOURCE_DIR
+	# slice = './data_source/linux_kernel/'  #slice code of software
+	# label_path = './C/label_source/linux_kernel/'   #labels
 	
-	make_label(code_path,label_path,_dict)	
+	make_label(SLICES_DIR, LABEL_SOURCE_DIR, _dict)	

@@ -23,17 +23,17 @@ This function is used to split the slice file and split codes into words
 # Return
     [slices[], labels[], focus[]]
 '''
-def get_sentences(_path,labelpath,deletepath,corpuspath,maptype=True):
+def get_sentences(slice_dir, labelpath, deletepath, corpuspath, maptype=True):
     FLAGMODE = False
-    if "SARD" in _path:
-	FLAGMODE = True
-
-    for filename in os.listdir(_path):
+    if "SARD" in slice_dir:
+        FLAGMODE = True
+        
+    for filename in os.listdir(slice_dir):
         if(filename.endswith(".txt") is False):
             continue
         print(filename)
 
-        filepath = os.path.join(_path, filename)
+        filepath = os.path.join(slice_dir, filename)
         f1 = open(filepath, 'r')
         slicelists = f1.read().split("------------------------------")
         f1.close()
@@ -48,11 +48,12 @@ def get_sentences(_path,labelpath,deletepath,corpuspath,maptype=True):
         labellists = pickle.load(f1)
         f1.close()
 	
-	filepath = os.path.join(deletepath,filename)
-	f = open(filepath,'rb')
-	list_delete = pickle.load(f)
-	f.close()
-	
+        # changed extension from txt to pkl
+        filepath = os.path.join(deletepath,filename[:-4] + ".pkl")
+        f = open(filepath,'rb')
+        list_delete = pickle.load(f)
+        f.close()
+
         lastprogram_id = 0
         program_id = 0
         index = -1
@@ -82,7 +83,7 @@ def get_sentences(_path,labelpath,deletepath,corpuspath,maptype=True):
             focuspointer = sentences[0].split(" ")[-2:]
             sliceid = index
             if sliceid in list_delete:
-		continue
+                continue
             file_name = sentences[0]
  
             if FLAGMODE:    
@@ -162,7 +163,7 @@ def get_sentences(_path,labelpath,deletepath,corpuspath,maptype=True):
                 else:
                     slice_corpus = slice_corpus + list_tokens
 
-	    if flag_focus == 0:
+            if flag_focus == 0:
                 continue
             slicefile_labels.append(labellists[file_name])
             slicefile_filenames.append(file_name)
@@ -197,13 +198,10 @@ def get_sentences(_path,labelpath,deletepath,corpuspath,maptype=True):
         f1.close()
 
 if __name__ == '__main__':
-    
-    SLICEPATH = './data/data_source/SARD/'
-    LABELPATH = './data/label_source/SARD/'
-    DELETEPATH = './data/delete_list/SARD/'
-    CORPUSPATH = './data/corpus/'
+    from Implementation.ProjectDir import SLICES_DIR, LABEL_SOURCE_DIR, LIST_DELETE_DIR, CORPUS_DIR
+
     MAPTYPE = True
 
-    sentenceDict = get_sentences(SLICEPATH, LABELPATH, DELETEPATH, CORPUSPATH, MAPTYPE)
+    sentenceDict = get_sentences(SLICES_DIR, LABEL_SOURCE_DIR, LIST_DELETE_DIR, CORPUS_DIR, MAPTYPE)
 
     print('success!')

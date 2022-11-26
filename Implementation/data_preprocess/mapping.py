@@ -6,7 +6,9 @@ import string
 import xlrd
 from get_tokens import *
 import pickle
-
+import sys
+sys.path.append('..')
+from Implementation.ProjectDir import DATA_PREPROCESS_DIR
 
 keywords_0 = ('auto', 'typedf', 'const', 'extern', 'register', 'static', 'volatile', 'continue', 'break',
               'default', 'return', 'goto', 'else', 'case')
@@ -33,7 +35,7 @@ keywords_3 = ('_strncpy*', '_tcsncpy*', '_mbsnbcpy*', '_wcsncpy*', '_strncat*', 
 keywords_5 = ('*malloc',)
 
 
-xread = xlrd.open_workbook('function.xls')
+xread = xlrd.open_workbook(os.path.join(DATA_PREPROCESS_DIR, 'function.xls'))
 keywords_4 = []
 for sheet in xread.sheets():
     col = sheet.col_values(0)[1:]

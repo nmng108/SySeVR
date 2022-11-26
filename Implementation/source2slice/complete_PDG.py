@@ -3,7 +3,7 @@ from access_db_operate import *
 import copy
 from general_op import *
 from py2neo.packages.httpstream import http
-http.socket_timeout = 9999
+http.socket_timeout = 99999
 
 def modifyDataEdgeVal(pdg):
     for edge in pdg.es:
@@ -459,9 +459,14 @@ def main():
     j = JoernSteps()
     j.connectToDatabase()
     all_func_node = getALLFuncNode(j)
+    
+    import sys
+    sys.path.append("..")
+    from Implementation.ProjectDir import DATA_DIR
+    
     for node in all_func_node:
         testID = getFuncFile(j, node._id).split('/')[-2]
-        path = os.path.join("pdg_db", testID)
+        path = os.path.join(DATA_DIR, "pdg_db", testID)
 
         store_file_name = node.properties['name'] + '_' + str(node._id)
 
@@ -472,7 +477,7 @@ def main():
         initpdg = translatePDGByNode(j, node)#get init PDG
         opt_pdg_1 = modifyStmtNode(initpdg)#merge every statement node
 
-        cfg_path = os.path.join("cfg_db", testID, store_file_name)
+        cfg_path = os.path.join(DATA_DIR, "cfg_db", testID, store_file_name)
         for _file in os.listdir(cfg_path):
             if _file == 'dict_if2cfgnode':
                 fin = open(os.path.join(cfg_path, _file))

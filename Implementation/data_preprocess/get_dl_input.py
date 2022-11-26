@@ -67,13 +67,13 @@ def get_dldata(filepath, dlTrainCorpusPath, dlTestCorpusPath, split=0.8, seed=11
             train_set = [[], [], [], [], [], []]
             ids = []
             for folder_train in folders_train[int(i*len(folders_train)/N) : int((i+1)*len(folders_train)/N)]:
-                for filename in os.listdir(filepath + folder_train + '/'):
+                for filename in os.listdir(os.path.join(filepath, folder_train)):
                     if mode in filename:
                         if folder_train not in os.listdir(dlTrainCorpusPath):   
                             folder_path = os.path.join(dlTrainCorpusPath, folder_train)
                             os.mkdir(folder_path)
-                        shutil.copyfile(filepath + folder_train + '/'+filename , dlTrainCorpusPath + folder_train + '/'+filename)
-                        f = open(filepath + folder_train + '/' + filename, 'rb')
+                        shutil.copyfile(os.path.join(filepath, folder_train, filename), os.path.join(dlTrainCorpusPath, folder_train, filename))
+                        f = open(os.path.join(filepath, folder_train, filename), 'rb')
                         data = pickle.load(f)
                         id_length = len(data[1])
                         for j in range(id_length):
@@ -99,17 +99,17 @@ def get_dldata(filepath, dlTrainCorpusPath, dlTestCorpusPath, split=0.8, seed=11
             test_set = [[], [], [], [], [], []]
             ids = []
             for folder_test in folders_test[int(i*len(folders_test)/N) : int((i+1)*len(folders_test)/N)]:
-                for filename in os.listdir(filepath + folder_test + '/'):
+                for filename in os.listdir(os.path.join(filepath, folder_test)):
                     if mode in filename:
                         if folder_test not in os.listdir(dlTestCorpusPath):
                             folder_path = os.path.join(dlTestCorpusPath, folder_test)
                             os.mkdir(folder_path)
-                        shutil.copyfile(filepath + folder_test + '/'+filename , dlTestCorpusPath + folder_test + '/'+filename) 
-                        f = open(filepath + folder_test + '/' + filename, 'rb')
+                        shutil.copyfile(os.path.join(filepath, folder_test, filename), os.path.join(dlTestCorpusPath, folder_test, filename))
+                        f = open(os.path.join(filepath, folder_test, filename), 'rb')
                         data = pickle.load(f)
-			id_length = len(data[1])
-			for j in range(id_length):
-			    ids.append(folder_test)
+                        id_length = len(data[1])
+                        for j in range(id_length):
+                            ids.append(folder_test)
                         for n in range(5):
                             test_set[n] = test_set[n] + data[n]
                         test_set[-1] = ids
@@ -122,31 +122,34 @@ def get_dldata(filepath, dlTrainCorpusPath, dlTestCorpusPath, split=0.8, seed=11
             gc.collect()
 
 if __name__ == "__main__":
-    
-    CORPUSPATH = "./data/cdg_ddg/corpus/"
-    VECTORPATH = "./data/cdg_ddg/vector/"
-    W2VPATH = "./w2v_model/wordmodel3"
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import CORPUS_DIR, W2V_MODEL_PATH, VECTOR_DIR, CORPUS_TRAINSET_DIR, CORPUS_TESTSET_DIR
+
+    # CORPUS_DIR = "./data/cdg_ddg/corpus/"
+    # VECTOR_DIR = "./data/cdg_ddg/vector/"
+    # W2V_MODEL_PATH = "./w2v_model/wordmodel3"
     print("turn the corpus into vectors...")
-    for corpusfiles in os.listdir(CORPUSPATH):
+    for corpusfiles in os.listdir(CORPUS_DIR):
         print(corpusfiles)
-        if corpusfiles not in os.listdir(VECTORPATH): 
-            folder_path = os.path.join(VECTORPATH, corpusfiles)
+        if corpusfiles not in os.listdir(VECTOR_DIR): 
+            folder_path = os.path.join(VECTOR_DIR, corpusfiles)
             os.mkdir(folder_path)
-        for corpusfile in os.listdir(CORPUSPATH + corpusfiles):
-            corpus_path = os.path.join(CORPUSPATH, corpusfiles, corpusfile)
+        for corpusfile in os.listdir(os.path.join(CORPUS_DIR, corpusfiles)):
+            corpus_path = os.path.join(CORPUS_DIR, corpusfiles, corpusfile)
             f_corpus = open(corpus_path, 'rb')
             data = pickle.load(f_corpus)
             f_corpus.close()
-            data[0] = generate_corpus(W2VPATH, data[0])
-            vector_path = os.path.join(VECTORPATH, corpusfiles, corpusfile)
+            data[0] = generate_corpus(W2V_MODEL_PATH, data[0])
+            vector_path = os.path.join(VECTOR_DIR, corpusfiles, corpusfile)
             f_vector = open(vector_path, 'wb')
             pickle.dump(data, f_vector, protocol=pickle.HIGHEST_PROTOCOL)
             f_vector.close()
     print("w2v over...")
 
     print("spliting the train set and test set...")
-    dlTrainCorpusPath = "./dl_input/cdg_ddg/train/"
-    dlTestCorpusPath = "./dl_input/cdg_ddg/test/"
-    get_dldata(VECTORPATH, dlTrainCorpusPath, dlTestCorpusPath)
+    # dlTrainCorpusPath = "./dl_input/cdg_ddg/train/"
+    # dlTestCorpusPath = "./dl_input/cdg_ddg/test/"
+    get_dldata(VECTOR_DIR, CORPUS_TRAINSET_DIR, CORPUS_TESTSET_DIR)
     
     print("success!")

@@ -79,10 +79,11 @@ def is_number(s):
     return False
 
 if __name__ == '__main__':
-    
-    SLICEPATH = './data_source/'
-    HASHPATH = './data_source/hash_slices/'
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import SLICES_DIR, SLICE_HASH_DIR
 
-    sentenceDict = get_hashs(SLICEPATH, HASHPATH)
+
+    sentenceDict = get_hashs(SLICES_DIR, SLICE_HASH_DIR)
 
     print('\nsuccess!')

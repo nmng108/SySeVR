@@ -7,10 +7,13 @@ import pickle
 import os
 import shutil
 import re
+import sys
+sys.path.append('..')
+import Implementation.ProjectDir as ProjectDir
 
 ##处理sard源程序文件格式
 def dealfile_sard(folder_path):
-    data_source = './newfile/SARD/'
+    data_source = ProjectDir.SOURCE_DATA + '/SARD/'
     for folder in os.listdir(folder_path):
         #print(folder)
         length = len(folder)
@@ -68,12 +71,14 @@ def dealfunc_nvd(folder_path,diff_path):
                     if sen.strip('-').strip() == '' or sen.strip('-').strip()==',' or sen.strip('-').strip() == ';' or sen.strip('-').strip() == '{' or sen.strip('-').strip() == '}':
                         continue
                     vul_code.append(sen.strip('-').strip())
-
+        # print "File: " + filepath
+        # print "linenum: "
         for i in range(0,len(sentences)):
             if sentences[i].strip() not in vul_code:
                 continue
             else:
                 linenum = i + 1
+                # print linenum
                 if filepath not in vulline_dict.keys():
                     vulline_dict[filepath] = [linenum]
                 else:
@@ -154,12 +159,12 @@ def dealfile_nvd(folder_path,diff_path):
                                 
 if __name__ == "__main__":
 
-    data_path = './SARD/SARD/'
+    data_path = ProjectDir.SARD_SOURCE_DATA
     #dealfile_sard(data_path)
     
-    data_source1 = './NVD/func_code/'
-    diff_path = './NVD/diff/'
-    #dealfunc_nvd(data_source1,diff_path)
+    data_source1 = ProjectDir.NVD_FUNC_CODE
+    diff_path = ProjectDir.NVD_DIFF
+    dealfunc_nvd(data_source1,diff_path)
     
-    data_source2 = './NVD/source_code/'
-    dealfile_nvd(data_source2,diff_path)
+    # data_source2 = './NVD/source_code/'
+    # dealfile_nvd(data_source2,diff_path)

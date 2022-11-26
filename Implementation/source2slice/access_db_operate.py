@@ -4,7 +4,7 @@ from igraph import *
 from general_op import *
 import pickle
 from py2neo.packages.httpstream import http
-http.socket_timeout = 9999
+http.socket_timeout = 9999999
 
 def get_all_use_bydefnode(db, node_id):
     query_str = "g.v(%d).in('USE')" % node_id
@@ -687,14 +687,19 @@ if __name__ == '__main__':
     j = JoernSteps()
     j.connectToDatabase()
 
-    pdg_db_path = "pdg_db"
+    import sys
+    sys.path.append("..")
+    from Implementation.ProjectDir import DATA_DIR
+    
+    pdg_db_path = "%s/pdg_db" % DATA_DIR
     list_testID = os.listdir(pdg_db_path)
     print list_testID
     for testID in list_testID:
         #if testID != '69055':
         #    continue
-
-        if os.path.exists(os.path.join("dict_call2cfgNodeID_funcID", str(testID))):
+        test_path = os.path.join(DATA_DIR, "dict_call2cfgNodeID_funcID", str(testID))
+        
+        if os.path.exists(test_path):
             continue
 
         call_g = getCallGraph(j, testID)
@@ -711,10 +716,10 @@ if __name__ == '__main__':
             else:
                 _dict[endnode['name']].append((edge['var'], call_g.vs[edge.tuple[0]]['name']))
 
-        if not os.path.exists(os.path.join("dict_call2cfgNodeID_funcID", str(testID))):
-            os.mkdir(os.path.join("dict_call2cfgNodeID_funcID", str(testID)))
+        if not os.path.exists(test_path):
+            os.mkdir(test_path)
 
-        filepath = os.path.join("dict_call2cfgNodeID_funcID", str(testID), "dict.pkl")
+        filepath = os.path.join(test_path, "dict.pkl")
         
         print _dict
         f = open(filepath, 'wb')

@@ -57,10 +57,14 @@ def evaluate_w2vModel(w2vModelPath):
         print(model.most_similar_cosmul(positive=[sign], topn=10))
     
 def main():
-    dec_tokenFlaw_path = ['./data/cdg_ddg/corpus/']
-    w2v_model_path = "./w2v_model/wordmodel3" 
-    generate_w2vModel(dec_tokenFlaw_path, w2v_model_path)
-    evaluate_w2vModel(w2v_model_path)
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import CORPUS_DIR, W2V_MODEL_PATH
+
+    dec_tokenFlaw_path = [CORPUS_DIR]
+    # w2v_model_path = "./w2v_model/wordmodel3" 
+    generate_w2vModel(dec_tokenFlaw_path, W2V_MODEL_PATH)
+    evaluate_w2vModel(W2V_MODEL_PATH)
     print("success!")
  
 if __name__ == "__main__":

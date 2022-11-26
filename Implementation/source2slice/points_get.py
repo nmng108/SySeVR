@@ -1,9 +1,12 @@
 ## coding:utf-8
 from access_db_operate import *
+import sys
+sys.path.append("..")
+from Implementation.ProjectDir import SRC2SLICE_DIR, DATA_DIR
 
 
 def get_all_sensitiveAPI(db):
-    fin = open("sensitive_func.pkl", 'rb')
+    fin = open(os.path.join(SRC2SLICE_DIR, "sensitive_func.pkl"), 'rb')
     list_sensitive_funcname = pickle.load(fin)
     fin.close()
 
@@ -229,26 +232,28 @@ if __name__ == '__main__':
     j = JoernSteps()
     j.connectToDatabase()
     
+    # from ProjectDir import DATA_DIR # IMPORTED FROM access_db_operate
+    
     _dict = get_all_sensitiveAPI(j)
-    f = open("sensifunc_slice_points.pkl", 'wb')
+    f = open("%s/sensifunc_slice_points.pkl" % DATA_DIR, 'wb')
     pickle.dump(_dict, f, True)
     f.close()
     print _dict
     
     _dict = get_all_pointer(j)
-    f = open("pointuse_slice_points.pkl", 'wb')
+    f = open("%s/pointuse_slice_points.pkl" % DATA_DIR, 'wb')
     pickle.dump(_dict, f, True)
     f.close()
     print _dict 
     
     _dict = get_all_array(j)
-    f = open("arrayuse_slice_points.pkl", 'wb')
+    f = open("%s/arrayuse_slice_points.pkl" % DATA_DIR, 'wb')
     pickle.dump(_dict, f, True)
     f.close()
     print _dict
     
     _dict = get_all_integeroverflow_point(j)
-    f = open("integeroverflow_slice_points_new.pkl", 'wb')
+    f = open("%s/integeroverflow_slice_points_new.pkl" % DATA_DIR, 'wb')
     pickle.dump(_dict, f, True)
     f.close()
 	

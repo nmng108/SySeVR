@@ -1,0 +1,3 @@
+[submodule "SySeVR_docker/docker_build/home/SySeVR/joern-tools"]
+	path = SySeVR_docker/docker_build/home/SySeVR/joern-tools
+	url = https://github.com/octopus-platform/joern-tools
