@@ -1,88 +1,85 @@
 # -*- coding:utf-8 -*-
+#Input: slices of vulnerability types (4 files in SLICES_DIR)
+#		dictionary of vulnerabilities found in NVD src code, given by dealfile.py
+#Output: the LABEL_SOURCE_DIR directory of labels for each kind of vul.
 import pickle
-import re
 import os
+import sys
+sys.path.append('..')
+from Implementation.ProjectDir import SLICES_DIR, LABEL_SOURCE_DIR
+from make_label import is_number, trim_sentence_list, trim_slice_lists
 
-def make_label(slice_path,label_path,_dict):	
+# Get dict when being imported or executed
+with open('./vul_context_func.pkl','rb') as f:
+	NVD_vul_line_dict = pickle.load(f)
+f.close()
 
-	for filename in os.listdir(slice_path):
-		filepath = os.path.join(slice_path,filename)
-		_labels = {}
-		f = open(filepath,'r')
-		slicelists = f.read().split('------------------------------')
-		f.close()
-
-		labelpath = os.path.join(label_path,filename[:-4]+'_label.pkl')	
-
-		if slicelists[0] == '':
-			del slicelists[0]
-		if slicelists[-1] == '' or slicelists[-1] == '\n' or slicelists[-1] == '\r\n':
-			del slicelists[-1]
+def make_label(slicelists, _dict):	
+	_labels = {}
     
-		for slice in slicelists:
-			sentences = slice.split('\n')
-			if sentences[0] == '\r' or sentences[0] == '':
-				del sentences[0]
-			if sentences == []:
-				continue
-			if sentences[-1] == '':
-				del sentences[-1]
-			if sentences[-1] == '\r':
-				del sentences[-1]
-        
-			slicename = sentences[0]
-			label = 0
-			key = './' + ('/').join(slicename.split(' ')[1].split('/')[-4:])  #key in label_source
-			if key not in _dict.keys():
-				_labels[slicename] = 0
-				continue
-			if len(_dict[key]) == 0:
-				_labels[slicename] = 0
-				continue
-			sentences = sentences[1:]
-			for sentence in sentences:
-				if (is_number(sentence.split(' ')[-1])) is False:
-					continue
-				linenum = int(sentence.split(' ')[-1])  
-				vullines = _dict[key]
-				if linenum in vullines:
-					label = 1
-					_labels[slicename] = 1
-					break 
-			if label == 0:
-				_labels[slicename] = 0	
+	# if slicelists[0] == '':
+	# 	del slicelists[0]
+	# if slicelists[-1] == '' or slicelists[-1] == '\n' or slicelists[-1] == '\r\n':
+	# 	del slicelists[-1]
 	
-		with open(labelpath,'wb') as f1:
-			pickle.dump(_labels,f1)
-		f1.close()
+	trim_slice_lists(slicelists)
 
-def is_number(s):
-    try:
-        float(s)
-        return True
-    except ValueError:
-        pass
- 
-    try:
-        import unicodedata
-        unicodedata.numeric(s)
-        return True
-    except (TypeError, ValueError):
-        pass
- 
-    return False	
+	for slice in slicelists:
+		sentences = slice.split('\n')
+
+		if sentences == []:
+			continue
+		
+		trim_sentence_list(sentences)
 	
+		slicename = sentences[0]
+		label = 0
+		key = './' + ('/').join(slicename.split(' ')[1].split('/')[-4:])  #key in label_source
+		if key not in _dict.keys():
+			_labels[slicename] = 0
+			continue
+		if len(_dict[key]) == 0:
+			_labels[slicename] = 0
+			continue
+		sentences = sentences[1:]
+		for sentence in sentences:
+			if (is_number(sentence.split(' ')[-1])) is False:
+				continue
+			linenum = int(sentence.split(' ')[-1])  
+			vullines = _dict[key]
+			if linenum in vullines:
+				label = 1
+				_labels[slicename] = 1
+				break 
+		if label == 0:
+			_labels[slicename] = 0	
+
+	return _labels
+
+# write to label file - main function for each kind of slice
+def write_label_to_file(slicelists, target_label_file, filemode = 'wb'):
+	label_list = make_label(slicelists, NVD_vul_line_dict)
+	
+	with open(target_label_file, filemode) as f:
+		pickle.dump(label_list, f)
+	f.close()
+
+
 if __name__ == '__main__':
 
-	with open('./vul_context_func.pkl','rb') as f:
-		_dict = pickle.load(f)
-	f.close()
 	#print(_dict)
 
-	import sys
-	sys.path.append('..')
-	from Implementation.ProjectDir import SLICES_DIR, LABEL_SOURCE_DIR
 	# slice = './data_source/linux_kernel/'  #slice code of software
 	# label_path = './C/label_source/linux_kernel/'   #labels
 	
-	make_label(SLICES_DIR, LABEL_SOURCE_DIR, _dict)	
+    for file in os.listdir(SLICES_DIR):
+        print(file)
+        abs_file_path = os.path.join(SLICES_DIR, file)
+        file_name = file.split('.')[0]
+        target_file_path = os.path.join(LABEL_SOURCE_DIR, file_name + '_label.pkl')
+        
+        f = open(abs_file_path, 'r')
+        slicelists = f.read().split('------------------------------')
+        f.close()
+
+        write_label_to_file(slicelists, target_file_path)
