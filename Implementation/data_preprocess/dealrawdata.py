@@ -35,36 +35,62 @@ This function is used to cut the dataset, do shuffle and save into pkl file.
     vector_dim: Int type, the number of data vector's dim
 
 '''
-def dealrawdata(raw_traindataSet_path, raw_testdataSet_path, traindataSet_path, testdataSet_path, batch_size, maxlen, vector_dim):
+def dealrawdata(raw_traindataSet_path, raw_testdataSet_path, traindataSet_path, testdataSet_path, 
+                batch_size, maxlen, vector_dim):
     print("Loading data...")
     
-    for filename in os.listdir(raw_traindataSet_path):
-        if not (filename.endswith(".pkl")):
-            continue
-        print(filename)
-        X_train, train_labels, funcs, filenames, testcases = load_data_binary(raw_traindataSet_path + filename, batch_size, maxlen=maxlen, vector_dim=vector_dim)
+    for root_folder in os.listdir(raw_traindataSet_path):
+        abs_folder_name = os.path.join(raw_traindataSet_path, root_folder)
+        
+        for filename in os.listdir(abs_folder_name):
+            if not (filename.endswith(".pkl")):
+                print(filename)
+                continue
+            print(filename)
+            X_train, train_labels, funcs, filenames, testcases = load_data_binary(os.path.join(abs_folder_name, filename), 
+                                                                                batch_size, maxlen=maxlen, vector_dim=vector_dim)
 
-        f_train = open(traindataSet_path + filename, 'wb')
-        pickle.dump([X_train, train_labels, funcs, filenames, testcases], f_train)
-        f_train.close()
+            target_folder_path = os.path.join(traindataSet_path, root_folder)
+            if not os.path.exists(target_folder_path):
+                os.mkdir(target_folder_path)
+                
+            f_train = open(os.path.join(target_folder_path, filename), 'wb')
+            pickle.dump([X_train, train_labels, funcs, filenames, testcases], f_train)
+            f_train.close()
 
-    for filename in os.listdir(raw_testdataSet_path):
-        if not ("api" in filename):
-            continue
-        print(filename)
-        if not (filename.endswith(".pkl")):
-            continue
-        X_test, test_labels, funcs, filenames, testcases = load_data_binary(raw_testdataSet_path + filename, batch_size, maxlen=maxlen, vector_dim=vector_dim)
 
-        f_test = open(testdataSet_path + filename, 'wb')
-        pickle.dump([X_test, test_labels, funcs, filenames, testcases], f_test)
-        f_test.close()
+    for root_folder in os.listdir(raw_testdataSet_path):
+        abs_folder_name = os.path.join(raw_testdataSet_path, root_folder)
+        
+        for filename in os.listdir(abs_folder_name):
+            if not ("api" in filename):
+                continue
+            if not (filename.endswith(".pkl")):
+                print(filename)
+                continue
+            print(filename)
+            X_test, test_labels, funcs, filenames, testcases = load_data_binary(os.path.join(abs_folder_name, filename), 
+                                                                                batch_size, maxlen=maxlen, vector_dim=vector_dim)
+
+            target_folder_path = os.path.join(testdataSet_path, root_folder)
+            if not os.path.exists(target_folder_path):
+                os.mkdir(target_folder_path)
+                
+            f_test = open(os.path.join(target_folder_path, filename), 'wb')
+            pickle.dump([X_test, test_labels, funcs, filenames, testcases], f_test)
+            f_test.close()
+
 
 def load_data_binary(dataSetpath, batch_size, maxlen=None, vector_dim=40, seed=113):   
     #load data
     f1 = open(dataSetpath, 'rb')
-    X, ids, focus, funcs, filenames, test_cases = pickle.load(f1)
+    # print(pickle.load(f1))
+    X, ids, focus, funcs, paths = pickle.load(f1)
     f1.close()
+    
+    filenames = test_cases = ''
+    if len(paths) == 2:
+        filenames, test_cases = paths
 	
     cut_count = 0
     fill_0_count = 0
@@ -99,7 +125,7 @@ def load_data_binary(dataSetpath, batch_size, maxlen=None, vector_dim=40, seed=1
     print(totallen)
 
     return X, ids, funcs, filenames, test_cases
-
+    # return None, None, None, None, None
 
 
 if __name__ == "__main__":

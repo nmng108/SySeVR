@@ -27,11 +27,14 @@ SLICE_LABEL_DIR = path.join(DATA_DIR, "slice_label")
 # Phase 2
 SLICE_HASH_DIR = path.join(DATA_DIR, "slice_hash")
 LIST_DELETE_DIR = path.join(DATA_DIR, "list_delete")
+
 CORPUS_DIR = path.join(DATA_DIR, "corpus")
 CORPUS_TRAINSET_DIR = path.join(DATA_DIR, "trainset")
 CORPUS_TESTSET_DIR = path.join(DATA_DIR, "testset")
+
 WORD2VEC_DIR = path.join(DATA_DIR, "w2v_model")
 W2V_MODEL_PATH = path.join(WORD2VEC_DIR, "wordmodel3")
+
 VECTOR_DIR = path.join(DATA_DIR, "vectors")
 MAIN_TRAINSET_DIR = path.join(DATA_DIR, "main_dl_model", "trainset")
 MAIN_TESTSET_DIR = path.join(DATA_DIR, "main_dl_model", "testset")
