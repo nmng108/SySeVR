@@ -5,7 +5,7 @@ import os
 import string
 import xlrd
 from get_tokens import *
-import pickle
+
 import sys
 sys.path.append('..')
 from Implementation.ProjectDir import DATA_PREPROCESS_DIR

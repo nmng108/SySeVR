@@ -24,12 +24,13 @@ Step 1-6 should follow detail_instructions.md
 
 8. getVulLineForCounting.py: 
 
-`` python $WORKDIR/source2slice/getVulLineForCounting.py $SYSEVR/data/source_data/SARD $SYSEVR/data/source_data/SARD/SARD_testcaseinfo.xml ``
-
 This file is used to extract the line numbers of vulnerable lines from SARD_testcaseinfo.xml. 
 "000" is the source code file. The output is SARD_testcaseinfo.txt, and then renamed as contain_all.txt (lay in the SARD folder).
 
-`` mv $SYSEVR/data/source_data/SARD/SARD_testcaseinfo.txt $SYSEVR/data/source_data/SARD/contain_all.txt ``
+```bash 
+python $WORKDIR/source2slice/getVulLineForCounting.py $SYSEVR/data/source_data/SARD $SYSEVR/data/source_data/SARD/SARD_testcaseinfo.xml 
+mv $SYSEVR/data/source_data/SARD/SARD_testcaseinfo.txt $SYSEVR/data/source_data/SARD/contain_all.txt 
+```
 
 
 Step 9-10 outputs are stored in label_source dir, so you need to create this dir first.
@@ -38,13 +39,15 @@ Step 9-10 outputs are stored in label_source dir, so you need to create this dir
 
 9. make_label_sard.py: This file is used to get labels of sard slices.
 
-`` python2 $WORKDIR/source2slice/make_label_sard.py ``
+`` python3 $WORKDIR/source2slice/make_label_sard.py ``
 
 10. make_label_nvd.py: This file is used to get labels of nvd slices.
 
-`` python2 $WORKDIR/source2slice/make_label_nvd.py ``
+`` python3 $WORKDIR/source2slice/make_label_nvd.py ``
 
-11. data_preprocess.py: This file is used to write the labels to the slice files.
+11. data_preprocess.py: This file is used to write the labels to the slice files.  
+
+    => Advantages from this step ??? (may be unnecessary)
 
 `` mkdir $DATADIR/slice_label ``
 

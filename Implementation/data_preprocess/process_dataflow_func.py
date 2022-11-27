@@ -103,7 +103,7 @@ def get_sentences(slice_dir, labelpath, deletepath, corpuspath, maptype=True):
                     pickle.dump([slicefile_corpus,slicefile_labels,slicefile_focus,slicefile_func,slicefile_filenames], f1)
                 else:
                     f1 = open(savefilename, 'rb')        
-                    data = cPickle.load(f1)
+                    data = pickle.load(f1)
                     f1.close()
                     f1 = open(savefilename, 'wb')              
                     pickle.dump([slicefile_corpus+data[0],slicefile_labels+data[1],slicefile_focus+data[2],slicefile_func+data[3],slicefile_filenames+data[4]], f1)
