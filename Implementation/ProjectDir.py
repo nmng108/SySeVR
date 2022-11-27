@@ -38,3 +38,7 @@ W2V_MODEL_PATH = path.join(WORD2VEC_DIR, "wordmodel3")
 VECTOR_DIR = path.join(DATA_DIR, "vectors")
 MAIN_TRAINSET_DIR = path.join(DATA_DIR, "main_dl_model", "trainset")
 MAIN_TESTSET_DIR = path.join(DATA_DIR, "main_dl_model", "testset")
+
+# Phase 3
+WEIGHT_PATH = path.join(DATA_DIR, "main_dl_model", "BGRU")
+RESULT_PATH = path.join(DATA_DIR, "main_dl_model", "result", "BGRU")

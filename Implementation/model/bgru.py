@@ -129,21 +129,25 @@ def main(traindataSet_path, testdataSet_path, realtestpath, weightpath, resultpa
     pickle.dump(result[1], f)
     f.close()
 
+    # add calls to file IO closing
     f_TP = open("./result_analyze/BGRU/TP_filenames.txt","ab+")
     for i in range(len(result[1])):
-	TP_index = result[1][i]
-	f_TP.write(str(filenames[TP_index])+'\n')
-		
+        TP_index = result[1][i]
+        f_TP.write(str(filenames[TP_index])+'\n')
+    f_TP.close()
+    
     f_FP = open("./result_analyze/BGRU/FP_filenames.txt","ab+")
     for j in range(len(result[2])):
         FP_index = result[2][j]
         f_FP.write(str(filenames[FP_index])+'\n')
-
+    f_FP.close()
+    
     f_FN = open("./result_analyze/BGRU/FN_filenames.txt","a+")
     for k in range(len(result[3])):
         FN_index = result[3][k]
         f_FN.write(str(filenames[FN_index])+'\n')
-
+    f_FN.close()
+    
     TN = all_test_samples - TP - FP - FN
     fwrite = open(resultpath, 'a')
     fwrite.write('cdg_ddg: ' + ' ' + str(all_test_samples) + '\n')
@@ -213,10 +217,17 @@ if __name__ == "__main__":
     maxLen = 500
     layers = 2
     dropout = 0.2
-    traindataSetPath = "./dl_input_shuffle/cdg_ddg/train/"
-    testdataSetPath = "./dl_input_shuffle/cdg_ddg/test/"
-    realtestdataSetPath = "data/"
-    weightPath = './model/BRGU'
-    resultPath = "./result/BGRU/BGRU"
-    main(traindataSetPath, testdataSetPath, realtestdataSetPath, weightPath, resultPath, batchSize, maxLen, vectorDim, layers, dropout)
+    
+    import sys
+    sys.path.append('..')
+    from Implementation.ProjectDir import MAIN_TRAINSET_DIR, MAIN_TESTSET_DIR, SOURCE_DATA, WEIGHT_PATH, RESULT_PATH
+
+    # traindataSetPath = "./dl_input_shuffle/cdg_ddg/train/"
+    # testdataSetPath = "./dl_input_shuffle/cdg_ddg/test/"
+    # realtestdataSetPath = "data/"
+    # weightPath = './model/BGRU'
+    # resultPath = "./result/BGRU/BGRU"
+    main(MAIN_TRAINSET_DIR, MAIN_TESTSET_DIR, SOURCE_DATA, 
+         WEIGHT_PATH, RESULT_PATH, 
+         batchSize, maxLen, vectorDim, layers, dropout)
     #testrealdata(realtestdataSetPath, weightPath, batchSize, maxLen, vectorDim, layers, dropout)
